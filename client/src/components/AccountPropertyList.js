@@ -22,8 +22,10 @@ class AccountDataList extends Component {
 
     render() {
         return (
-            <div>
-                {this.renderAccountData()}
+            <div class="container">
+                <div>
+                    {this.renderAccountData()}
+                </div>
             </div>
         );
     }

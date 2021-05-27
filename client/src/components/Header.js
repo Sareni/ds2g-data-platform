@@ -28,30 +28,27 @@ class Header extends Component {
 
             default:
                 return [
-                    <li key='1'>
-                        <button onClick={() => this.props.showPaymentDialog()} className='btn white blue-grey-text buttonHoverWithShadow'>
-                            Add Credits
-                            <i className="material-icons left blue-grey-text" style={{lineHeight: 'inherit', height: 'auto'}}>add</i>
-                        </button>
-                    </li>,
-                    <li key='2'><div style={{width: '35px', height: '1px'}}></div></li>,
-                    /*<li key='2' style={{ margin: '0 10px' }}>
-                        Credits: { this.props.auth.credits }
-                    </li>,
-                    <li key='3'><a href='/api/logout'><i className="material-icons right">chevron_right</i>Logout</a></li>,*/
-                    <li><a href="/about"><i className="material-icons">help</i></a></li>,
-                    <li><a href="/messages"><i className="material-icons">mail</i></a></li>,
-                    <ul id="dropdown1" className="dropdown-content">
-                        <li><a href='/account' className='blue-grey-text'><i className="material-icons left" style={{marginRight: '19px', marginLeft: '0px'}}>info</i>Account</a></li>
-                        <li><a href='#!' className='blue-grey-text'><span style={{fontWeight: 'bolt', marginRight: '25px', marginLeft: '0px'}}>{ this.props.auth.credits }</span>Credits</a></li>
-                        <li><a href='#!' className='blue-grey-text'><i className="material-icons left" style={{marginRight: '19px', marginLeft: '0px'}}>build</i>Preferences</a></li>
-                        <li className="divider"></li>
-                        <li key='4'><a href='/api/logout' className='blue-grey-text'><i className="material-icons left" style={{marginRight: '19px', marginLeft: '0px'}}>logout</i>Logout</a></li>
-                    </ul>,
-                    <li><a className="dropdown-trigger" href="#!" data-target="dropdown1"><i className="material-icons">account_circle</i></a></li>
+                    <li><Link to="/documentation">Dokumentation</Link></li>,
+                    <li><Link to="/pricing">Preise</Link></li>,
+                    <li><Link to="/projects">Projekte</Link></li>,
+                    <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
+                    <li><a href='#!'><i className="material-icons">build</i></a></li>,
+                    <li><a href="#!"><i className="material-icons">account_circle</i></a></li>,
+                    <li><a href="/api/logout"><i className="material-icons">logout</i></a></li>
                 ];
         }
     }
+
+    /*
+
+                    <ul id="dropdown1" className="dropdown-content">
+                        <li><a href='/account' className='blue-grey-text'><i className="material-icons left" style={{marginRight: '19px', marginLeft: '0px'}}>info</i>Account</a></li>
+                        <li className="divider"></li>
+                        <li><a href='#!' className='blue-grey-text'><span style={{fontWeight: 'bolt', marginRight: '25px', marginLeft: '0px'}}>{ this.props.auth.credits }</span>Credits</a></li>
+                    </ul>,
+                    <li><a className="dropdown-trigger" href="#!" data-target="dropdown1"><i className="material-icons">account_circle</i></a></li>,
+                    
+    */
 
     render() { // <i className="material-icons left">data_usage</i> track-anything
         return (
@@ -59,10 +56,12 @@ class Header extends Component {
                 <div className='nav-wrapper container'>
                     <Link
                             to={ this.props.auth ? '/dashboard' : '/' }
-                            className='left brand-logo'
+                            className='left'
                         >
-                            
-                            DS2G - Data Platform
+                            <div className='white-text' style={{lineHeight: '18px', paddingBottom: '8px'}}>
+                                <span style={{fontSize: '28px', lineHeight: '38px', letterSpacing: '8px'}}>DS2G</span><br />
+                                Data Platform
+                            </div>
                         </Link>
                     <ul className='right'>
                         { this.renderContent() }
