@@ -12,7 +12,7 @@ const Token = mongoose.model('tokens');
 
 const { addTrackDBViewForNewUser } = require('./trackAnythingDB');
 const { accountManagementServerURI } = require('../config/keys');
-const { initUserInSuperset } = require('./superset');
+const { initUserInSuperset, DEMO_CONTENT_TYPES } = require('./superset');
 
 // TODO: passport-local-mongoose
 
@@ -30,7 +30,7 @@ async function createTrackingAccount(userId, plan) {
 
 async function createSupersetAccount(accountKey) {
   await addTrackDBViewForNewUser(accountKey);
-  await initUserInSuperset(accountKey)
+  await initUserInSuperset(accountKey, undefined, DEMO_CONTENT_TYPES.ADVANCED);
 }
 
 /* passport.serializeUser((user, done) => {

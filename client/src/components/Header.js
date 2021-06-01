@@ -32,7 +32,7 @@ class Header extends Component {
                     <li><Link to="/pricing">Preise</Link></li>,
                     <li><Link to="/projects">Projekte</Link></li>,
                     <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
-                    <li><a href='#!'><i className="material-icons">build</i></a></li>,
+                    <li><a href='/preferences'><i className="material-icons">build</i></a></li>,
                     <li><a href="#!"><i className="material-icons">account_circle</i></a></li>,
                     <li><a href="/api/logout"><i className="material-icons">logout</i></a></li>
                 ];

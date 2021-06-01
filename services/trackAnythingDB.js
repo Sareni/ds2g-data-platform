@@ -30,7 +30,7 @@ async function initTrackDBConnections() {
 // TODO: can be done via superset api (datasource parameters)
 async function addMySQLTrackDBViewForNewUser(accountKey) {
     const name = accountKeyToName(accountKey);
-    const query = `CREATE VIEW ${name} AS (SELECT * FROM tracks WHERE account="${accountKey}")`;
+    const query = `CREATE VIEW \`${name}\` AS (SELECT * FROM tracks WHERE account="${accountKey}")`;
     return new Promise((resolve) => {
         connection.query(query, function(error, results, fields) {
             if(error) {

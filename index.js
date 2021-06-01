@@ -44,6 +44,7 @@ require('./routes/billingRoutes')(app);
 require('./routes/surveyRoutes')(app);
 require('./routes/accountRoutes')(app);
 require('./routes/supersetRoutes')(app);
+require('./routes/preferencesRoutes')(app);
 
 mongoose.connect(keys.mongodbConnectionString, { useNewUrlParser: true });
 initTrackDBConnections();

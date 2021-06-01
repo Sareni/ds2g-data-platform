@@ -16,6 +16,7 @@ import Reports from './Reports';
 import Login from './Login';
 import Account from './Account';
 import SurveyNew from './surveys/SurveyNew';
+import Preferences from './Preferences';
 
 class App extends Component {
     componentDidMount() {
@@ -35,6 +36,7 @@ class App extends Component {
                         <Route exact path='/documentation' component={Documentation}/>
                         <Route exact path='/pricing' component={Pricing}/>
                         <Route exact path='/projects' component={Projects}/>
+                        <Route exact path='/preferences' component={Preferences}/>
                         <Route exact path='/signup' component={Signup}/>
                         <Route exact path='/support' component={SupportForm}/>
                         <Route exact path='/login' component={Login}/>
