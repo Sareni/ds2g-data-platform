@@ -27,10 +27,21 @@ async function initTrackDBConnections() {
     await initMySQLTrackDBConnections();
 }
 
-// TODO: can be done via superset api (datasource parameters)
-async function addMySQLTrackDBViewForNewUser(accountKey) {
-    const name = accountKeyToName(accountKey);
-    const query = `CREATE VIEW \`${name}\` AS (SELECT * FROM tracks WHERE account="${accountKey}")`;
+async function createMySQLTrackinatorView(name, accountKey) {
+    const query = `CREATE VIEW \`${name}\` AS (SELECT track_date, application, type FROM tracks WHERE account="${accountKey}")`;
+    return new Promise((resolve) => {
+        connection.query(query, function(error, results, fields) {
+            if(error) {
+                console.log(error);
+                throw error;
+            }
+            resolve();
+        });
+    });
+}
+
+async function createMySQLDemoDataView(name) {
+    const query = `CREATE VIEW \`${name}\` AS (SELECT * FROM demo_data)`;
     return new Promise((resolve) => {
         connection.query(query, function(error, results, fields) {
             if(error) {
@@ -40,6 +51,14 @@ async function addMySQLTrackDBViewForNewUser(accountKey) {
             resolve();
         });
     });    
+}
+
+// TODO: can be done via superset api (datasource parameters) -> no because to much rights for user?
+async function addMySQLTrackDBViewForNewUser(accountKey) {
+    const name = accountKeyToName(accountKey);
+    await createMySQLTrackinatorView(name, accountKey);
+    await createMySQLDemoDataView(`${name}_demo`);
+   
 }
 
 async function addTrackDBViewForNewUser(accountKey, databaseType = AVAILABELE_DATABASES.MYSQL) {

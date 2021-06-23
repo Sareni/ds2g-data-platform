@@ -38,9 +38,16 @@ module.exports = (app) => {
 
 
 // https://dev-x4orscvo.eu.auth0.com/v2/logout
-    app.get('/api/logout', (req, res) => {
-        req.logout();
-        res.redirect('/');
+    app.get('/api/logout/', (req, res) => {
+        console.log('logout application:', req.query.application);
+        if(!req.query.application) {
+            res.redirect('http://superset.zenpa.at/logout');
+        } /* else if(req.params.application === 'superset') {
+            res.redirect('http://nifi.zenpa.at/logout');
+        } */ else {
+            req.logout();
+            res.redirect('/');
+        }
     });
 
     app.get('/api/current_user', async (req, res) => {

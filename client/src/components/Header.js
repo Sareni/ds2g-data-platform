@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import M from 'materialize-css';
 import * as actions from '../actions';
 
@@ -34,7 +35,7 @@ class Header extends Component {
                     <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
                     <li><a href='/preferences'><i className="material-icons">build</i></a></li>,
                     <li><a href="#!"><i className="material-icons">account_circle</i></a></li>,
-                    <li><a href="/api/logout"><i className="material-icons">logout</i></a></li>
+                    <li><a href="/api/logout"><i className="material-icons">logout</i></a></li>,
                 ];
         }
     }
