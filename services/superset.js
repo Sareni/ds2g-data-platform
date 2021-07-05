@@ -46,14 +46,15 @@ async function createSupersetDataset(name, alias, database, authToken) {
             database,
             owners: [1],
             schema: "",
-            table_name: name
+            custom_label: alias,
+            table_name: name,
+            // sql: `SELECT * FROM ${name}` // Unknown Field
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
         });
 
         const updateResponse = await axios.put(`${supersetConfig.apiURL}/dataset/${createResponse.data.id}`, {
-            sql: `SELECT * FROM ${name}`,
-            table_name: alias
+            sql: `SELECT * FROM ${name}`
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
         });
@@ -61,7 +62,8 @@ async function createSupersetDataset(name, alias, database, authToken) {
 
         return updateResponse.data.id;
     }  catch(e) {
-        console.log('Error - createDemoDataDasbhoard');
+        console.log('Error - createSupersetDataset');
+        console.log(e.response.data);
     }
 }
 
@@ -271,7 +273,7 @@ async function initUserInSuperset(accountKey, pw=testPw, demoContentType) {
         const name = accountKeyToName(accountKey);
         const adminAuthToken = await adminLoginToSuperset();
 
-        console.log('init');
+        console.log('init', adminAuthToken);
 
         const TRACKINATOR_DATABASE = 2;
         const trackinatorDatasetId = await createSupersetDataset(name, 'Tracks', TRACKINATOR_DATABASE, adminAuthToken);
@@ -279,11 +281,11 @@ async function initUserInSuperset(accountKey, pw=testPw, demoContentType) {
         //const combinedDemoDatasetId = `0-${demoDatasetId}`; // TODO alias should be used instead
         console.log('datasets');
 
-        const userId = await createSupersetAccount(name, pw, [{id: trackinatorDatasetId, alias: 'Tracks'}, {id: demoDatasetId, alias: 'Demo'}], adminAuthToken);
+        const userId = await createSupersetAccount(name, pw, [{id: trackinatorDatasetId, alias: name}, {id: demoDatasetId, alias: `${name}_demo`}], adminAuthToken);
         console.log('account');
 
-        //updateSupersetDatasetOwners(trackinatorDatasetId, [userId], adminAuthToken);
-        //updateSupersetDatasetOwners(demoDatasetId, [userId], adminAuthToken);
+        updateSupersetDatasetOwners(trackinatorDatasetId, [1, userId], adminAuthToken);
+        updateSupersetDatasetOwners(demoDatasetId, [1, userId], adminAuthToken);
         console.log('update');
 
         const userAuthToken = await userLoginToSuperset(name, pw);

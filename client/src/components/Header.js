@@ -33,9 +33,9 @@ class Header extends Component {
                     <li><Link to="/pricing">Preise</Link></li>,
                     <li><Link to="/projects">Projekte</Link></li>,
                     <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
-                    <li><a href='/preferences'><i className="material-icons">build</i></a></li>,
-                    <li><a href="#!"><i className="material-icons">account_circle</i></a></li>,
-                    <li><a href="/api/logout"><i className="material-icons">logout</i></a></li>,
+                    <li><a href='/preferences'><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>build</i></a></li>,
+                    <li><a href="#!"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>account_circle</i></a></li>,
+                    <li><a href="/api/logout"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>logout</i></a></li>,
                 ];
         }
     }
@@ -53,14 +53,14 @@ class Header extends Component {
 
     render() { // <i className="material-icons left">data_usage</i> track-anything
         return (
-            <nav className='blue-grey'>
+            <nav className='blue-grey' style={{ height: '51px', lineHeight: '51px'}}>
                 <div className='nav-wrapper container'>
                     <Link
                             to={ this.props.auth ? '/dashboard' : '/' }
                             className='left'
                         >
-                            <div className='white-text' style={{lineHeight: '18px', paddingBottom: '8px'}}>
-                                <span style={{fontSize: '28px', lineHeight: '38px', letterSpacing: '8px'}}>DS2G</span><br />
+                            <div className='white-text' style={{lineHeight: '16px', paddingBottom: '4px'}}>
+                                <span style={{fontSize: '26px', lineHeight: '30px', letterSpacing: '10px'}}>DS2G</span><br />
                                 Data Platform
                             </div>
                         </Link>

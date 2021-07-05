@@ -14,7 +14,10 @@ const DocumentationCard = () => {
                 I am convenient because I require little markup to use effectively.</p>
                 </div>
                 <div class="card-action">
-                <a href="#" class='blue-grey-text'>Show more ...</a>
+                <a href="#" class='blue-grey-text'>
+                    Open
+                    <i class="material-icons" style={{verticalAlign: 'top', fontSize: '22px'}}>navigate_next</i>
+                </a>
                 </div>
             </div>
         </div>
