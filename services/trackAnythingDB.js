@@ -41,7 +41,7 @@ async function createMySQLTrackinatorView(name, accountKey) {
 }
 
 async function createMySQLDemoDataView(name) {
-    const query = `CREATE VIEW \`${name}\` AS (SELECT * FROM demo_data)`;
+    const query = `CREATE VIEW \`${name}\` AS (SELECT * FROM shares_demo_data)`;
     return new Promise((resolve) => {
         connection.query(query, function(error, results, fields) {
             if(error) {
