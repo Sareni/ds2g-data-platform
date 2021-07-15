@@ -3,7 +3,7 @@ const requireLogin = require('../middlewares/requireLogin');
 //const proxy = require('./supersetProxy')();
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({
-    target: 'http://superset.zenpa.at:80/login/ownauth',
+    target: 'http://superset.ds2g.io:80/login/ownauth',
     changeOrigin: true,
     ignorePath: true
 });
@@ -20,6 +20,6 @@ proxy.on('proxyReq', (proxyReq, req, res, options) => {
 module.exports = (app) => {
     // CSRF TOKEN-cookie doesnt get proxied...
     app.get('/api/reports', requireLogin, async (req, res) => {
-        proxy.web(req, res); //http://superset.zenpa.at:80/login/auth0
+        proxy.web(req, res); //http://superset.ds2g.io:80/login/auth0
     });
 }

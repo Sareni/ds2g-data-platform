@@ -6,7 +6,7 @@ import SurveyList from './surveys/SurveyList';
 const Dashboard = () => {
     return (
         <div style={{ backgroundColor: '#F7F7F7'}}>
-            <iframe src={`http://superset.zenpa.at:80/login/ownauth`} style={{ width: '100%', height: 'calc(100vh - 69px)' }} frameBorder="0" />
+            <iframe src={`http://superset.ds2g.io:80/login/ownauth`} style={{ width: '100%', height: 'calc(100vh - 69px)' }} frameBorder="0" />
         </div>
     );
 }

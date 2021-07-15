@@ -41,9 +41,9 @@ module.exports = (app) => {
     app.get('/api/logout/', (req, res) => {
         console.log('logout application:', req.query.application);
         if(!req.query.application) {
-            res.redirect('http://superset.zenpa.at/logout');
+            res.redirect('http://superset.ds2g.io/logout');
         } /* else if(req.params.application === 'superset') {
-            res.redirect('http://nifi.zenpa.at/logout');
+            res.redirect('http://nifi.ds2g.io/logout');
         } */ else {
             req.logout();
             res.redirect('/');
