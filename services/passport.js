@@ -18,7 +18,7 @@ const { addTrackDBViewForNewUser } = require('./trackAnythingDB');
 const { accountManagementServer } = require('../config/ds2g_data_platform_config');
 const { initUserInSuperset, DEMO_CONTENT_TYPES } = require('./superset');
 
-const accountManagementServerURI = `${accountManagementServer.protocol}${accountManagementServer.host}:${accountManagementServer.port}`
+const accountManagementServerURI = `${accountManagementServer.protocol}://${accountManagementServer.host}:${accountManagementServer.port}`
 
 // TODO: passport-local-mongoose
 
@@ -26,10 +26,12 @@ const User = mongoose.model('users');
 
 
 async function createTrackingAccount(userId, plan) {
+  console.log('creating...');
   const res= await axios.post(`${accountManagementServerURI}/createAccount`, {
     userId,
     plan
   });
+  console.log('created');
   return res.data;
 }
 
