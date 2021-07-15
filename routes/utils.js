@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { accountManagementServer } = require('../config/ds2g_data_platform_config');
-const accountManagementServerURI = `${accountManagementServer.host}:${accountManagementServer.port}`;
+const accountManagementServerURI = `${accountManagementServer.protocol}://${accountManagementServer.host}:${accountManagementServer.port}`;
 
 const getUserDetails = async (userId) => {
     try {
