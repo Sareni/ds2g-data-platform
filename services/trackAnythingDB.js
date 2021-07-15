@@ -61,9 +61,9 @@ async function addMySQLTrackDBViewForNewUser(accountKey) {
    
 }
 
-async function addTrackDBViewForNewUser(accountKey, databaseType = AVAILABELE_DATABASES.MYSQL) {
+async function addTrackDBViewForNewUser(accountKey, databaseType = AVAILABELE_TRACKING_DATABASES.MYSQL) {
     switch(databaseType) {
-        case AVAILABELE_DATABASES.MYSQL: await addMySQLTrackDBViewForNewUser(accountKey); break;
+        case AVAILABELE_TRACKING_DATABASES.MYSQL: await addMySQLTrackDBViewForNewUser(accountKey); break;
         default: throw new Error('addDBViewForNewUser: databaseType unknown!');
     } 
 }

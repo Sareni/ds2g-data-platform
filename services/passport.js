@@ -26,12 +26,10 @@ const User = mongoose.model('users');
 
 
 async function createTrackingAccount(userId, plan) {
-  console.log('creating...');
   const res= await axios.post(`${accountManagementServerURI}/createAccount`, {
     userId,
     plan
   });
-  console.log('created');
   return res.data;
 }
 
