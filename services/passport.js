@@ -3,7 +3,11 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const BasicStrategy = require('passport-http').BasicStrategy;
 const mongoose = require('mongoose');
-const keys = require('../config/keys');
+const {
+  google: googleConfig,
+  auth0: auth0Config,
+  ownAuth: ownAuthConfig
+} = require('../config/ds2g_data_platform_config').authKeys;
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 const Auth0Stragegy = require('passport-auth0');
@@ -11,8 +15,10 @@ const BearerStrategy = require('passport-http-bearer').Strategy
 const Token = mongoose.model('tokens');
 
 const { addTrackDBViewForNewUser } = require('./trackAnythingDB');
-const { accountManagementServerURI } = require('../config/keys');
+const { accountManagementServer } = require('../config/ds2g_data_platform_config');
 const { initUserInSuperset, DEMO_CONTENT_TYPES } = require('./superset');
+
+const accountManagementServerURI = `${accountManagementServer.host}:${accountManagementServer.port}`
 
 // TODO: passport-local-mongoose
 
@@ -53,9 +59,9 @@ passport.deserializeUser((obj, done) => {
 
 passport.use(
   new Auth0Stragegy({
-      domain: keys.AUTH0_DOMAIN,
-      clientID: keys.AUTH0_CLIENT_ID,
-      clientSecret: keys.AUTH0_CLIENT_SECRET,
+      domain: auth0Config.domain,
+      clientID: auth0Config.clientID,
+      clientSecret: auth0Config.clientSecret,
       callbackURL: '/auth/auth0/callback'
     },
     async (accessToken, refreshToken, extraParams, profile, done) => {
@@ -77,8 +83,8 @@ passport.use(
 passport.use(
   new GoogleStrategy(
     {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
+      clientID: googleConfig.clientID,
+      clientSecret: googleConfig.clientSecret,
       callbackURL: '/auth/google/callback',
       proxy: true,
     },
@@ -163,11 +169,11 @@ passport.use(new BearerStrategy(
 
 passport.use('client-basic', new BasicStrategy(
   function(username, password, callback) {
-    if (username !== keys.client_id || password !== keys.client_secret) {
+    if (username !== ownAuthConfig.clientID || password !== ownAuthConfig.clientSecret) {
       return callback(null, false);
     }
 
-    return callback(null, {client_id: keys.client_id, client_secret: keys.client_secret}); // !!!!????
+    return callback(null, {client_id: ownAuthConfig.clientID, client_secret: ownAuthConfig.clientSecret}); // !!!!????
   }
 ));
 
