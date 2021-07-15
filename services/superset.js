@@ -8,7 +8,7 @@ const { createDashboardObject } = require('./supersetDashboardBuilder');
 
 // TODO: remove!!
 const testPw = supersetConfig.defaultPasswordNewUser;
-const apiURL = `${supersetConfig.host}:${supersetConfig.port}${supersetConfig.apiPath}`;
+const apiURL = `${supersetConfig.protocol}://${supersetConfig.host}:${supersetConfig.port}${supersetConfig.apiPath}`;
 
 const DEMO_CONTENT_TYPES = {
     BASIC: 'basic',
