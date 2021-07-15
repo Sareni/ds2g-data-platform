@@ -7,7 +7,7 @@ const requireLogin = require('../middlewares/requireLogin');
 const requireBearerAuthentication = require('../middlewares/requireBearerAuthentication');
 const requireClientAuthentication = require('../middlewares/requireClientAuthentication');
 const oauth2Service = require('../services/oauth2.js');
-const keys = require('../config/keys');
+const config = require('../config/ds2g_data_platform_config');
 const { accountKeyToName } = require('../services/superset');
 const User = mongoose.model('users');
 module.exports = (app) => {

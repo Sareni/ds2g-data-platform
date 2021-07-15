@@ -4,9 +4,9 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
-const keys = require('./config/keys');
+const { connectionString } = require('./config/ds2g_data_platform_config').databases.mongodb;
+const { key: cookiesKey } = require('./config/ds2g_data_platform_config').cookies;
 const app = express();
-// const proxy = require('./routes/shinyProxy')();
 const proxy = require('./routes/supersetProxy')();
 
 const { initTrackDBConnections } = require('./services/trackAnythingDB');
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(
     cookieSession({ // TODO: express-session?
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [keys.cookieKey]
+        keys: [cookiesKey]
     })
 );
 
@@ -41,12 +41,11 @@ app.use(flash());
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
-require('./routes/surveyRoutes')(app);
 require('./routes/accountRoutes')(app);
 require('./routes/supersetRoutes')(app);
 require('./routes/preferencesRoutes')(app);
 
-mongoose.connect(keys.mongodbConnectionString, { useNewUrlParser: true });
+mongoose.connect(connectionString, { useNewUrlParser: true });
 initTrackDBConnections();
 
 //if(process.env.NODE_ENV === 'production') {
@@ -57,8 +56,6 @@ initTrackDBConnections();
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
        });
 //}
-
-
 
 const PORT = process.env.PORT || 5001; 
 const server = app.listen(PORT);

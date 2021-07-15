@@ -1,11 +1,11 @@
 const httpProxy = require('http-proxy');
-const keys = require('../config/keys');
+const { superset: supersetConfig } = require('../config/ds2g_data_platform_config');
 const { getTrackingKey } = require('./utils');
 
 const proxy = httpProxy.createProxyServer({
     target: {
-        host: keys.supersetHost,
-        port: keys.supersetPort,
+        host: supersetConfig.host,
+        port: supersetConfig.port,
         protocol: 'http'
       },
       ignorePath: true

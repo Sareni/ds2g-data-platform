@@ -1,10 +1,14 @@
 const axios = require('axios');
 const { exec } = require('child_process');
 const { config } = require('process');
-const { supersetConfig, testPw } = require('../config/keys');
+const { superset: supersetConfig } = require('../config/ds2g_data_platform_config');
 
 const { createChartObject } = require('./supersetChartBuilder');
 const { createDashboardObject } = require('./supersetDashboardBuilder');
+
+// TODO: remove!!
+const testPw = supersetConfig.defaultPasswordNewUser;
+const apiURL = `${supersetConfig.host}:${supersetConfig.port}${supersetConfig.apiPath}`;
 
 const DEMO_CONTENT_TYPES = {
     BASIC: 'basic',
@@ -14,11 +18,11 @@ const DEMO_CONTENT_TYPES = {
 
 async function adminLoginToSuperset() {
     try {
-        const res = await axios.post(`${supersetConfig.apiURL}/security/login`, {
-            password: supersetConfig.password,
+        const res = await axios.post(`${apiURL}/security/login`, {
+            password: supersetConfig.adminPassword,
             provider: "db",
             refresh: true,
-            username: supersetConfig.username
+            username: supersetConfig.adminUser
         });
         return res.data.access_token;
     } catch(e) {
@@ -28,7 +32,7 @@ async function adminLoginToSuperset() {
 
 async function userLoginToSuperset(username, password) {
     try {
-        const res = await axios.post(`${supersetConfig.apiURL}/security/login`, {
+        const res = await axios.post(`${apiURL}/security/login`, {
             password,
             provider: "db",
             refresh: true,
@@ -42,7 +46,7 @@ async function userLoginToSuperset(username, password) {
 
 async function createSupersetDataset(name, alias, database, authToken) {
     try {
-        const createResponse = await axios.post(`${supersetConfig.apiURL}/dataset/`, {
+        const createResponse = await axios.post(`${apiURL}/dataset/`, {
             database,
             owners: [1],
             schema: "",
@@ -53,7 +57,7 @@ async function createSupersetDataset(name, alias, database, authToken) {
             headers: { Authorization: `Bearer ${authToken}`}
         });
 
-        const updateResponse = await axios.put(`${supersetConfig.apiURL}/dataset/${createResponse.data.id}`, {
+        const updateResponse = await axios.put(`${apiURL}/dataset/${createResponse.data.id}`, {
             sql: `SELECT * FROM ${name}`
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
@@ -70,7 +74,7 @@ async function createSupersetDataset(name, alias, database, authToken) {
 // TODO check if admin is owner or overridden
 async function updateSupersetDatasetOwners(datasetId, newOwners, authToken) {
     try {
-        const res = await axios.put(`${supersetConfig.apiURL}/dataset/${datasetId}`, {
+        const res = await axios.put(`${apiURL}/dataset/${datasetId}`, {
             owners: newOwners,
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
@@ -90,7 +94,7 @@ async function createSupersetAccount(name, pw, datasets, authToken) {
     });
 
     try {
-        const res = await axios.post(`${supersetConfig.apiURL}/security/create_ta_user/`, {
+        const res = await axios.post(`${apiURL}/security/create_ta_user/`, {
             username: name,
             password: pw,
             datasourceIds: datasourceIds.join(','),
@@ -131,7 +135,7 @@ async function createTrackinatorDemoCharts(userId, datasetId, dashboardId, authT
     for (const config of configs) {
         const chartObject = createChartObject(config);
         try {
-            const res = await axios.post(`${supersetConfig.apiURL}/chart/`,
+            const res = await axios.post(`${apiURL}/chart/`,
                 chartObject, {
                     headers: { Authorization: `Bearer ${authToken}`}
                 }
@@ -152,7 +156,7 @@ async function createTrackinatorDemoDasbhoard(userId, authToken) {
     const o =  createDashboardObject(config.name, config.owners);
     try {
         const res = await axios.post(
-            `${supersetConfig.apiURL}/dashboard/`,
+            `${apiURL}/dashboard/`,
             o, {
                 headers: { Authorization: `Bearer ${authToken}`}
             }
@@ -200,7 +204,7 @@ async function createDemoDataCharts(userId, datasetId, dashboardId, authToken) {
         const chartObject = createChartObject(config);
         try {
             res = await axios.post(
-                `${supersetConfig.apiURL}/chart/`,
+                `${apiURL}/chart/`,
                 chartObject, {
                     headers: { Authorization: `Bearer ${authToken}`}
                 }
@@ -221,7 +225,7 @@ async function createDemoDataDasbhoard(userId, authToken) {
     };
     const o = createDashboardObject(config.name, config.owners);
     try {
-        const res = await axios.post(`${supersetConfig.apiURL}/dashboard/`,
+        const res = await axios.post(`${apiURL}/dashboard/`,
             o, {
                 headers: { Authorization: `Bearer ${authToken}`}
             }
@@ -267,7 +271,7 @@ async function createDemoContent(userId, datasetIds, authToken, type = DEMO_CONT
     }
 }
 
-async function initUserInSuperset(accountKey, pw=testPw, demoContentType) {
+async function initUserInSuperset(accountKey, pw=testPw, demoContentType) { // TODO: remove testPw
     try {
         console.log('start');
         const name = accountKeyToName(accountKey);

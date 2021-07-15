@@ -1,12 +1,11 @@
 const crypto = require('crypto');
-const keys = require('../config/keys');
+const { randomKey } = require('../config/ds2g_data_platform_config').crypto;
 
 const algorithm = 'aes-256-ctr';
-const secretKey = keys.cryptoKey;
 const iv = crypto.randomBytes(16);
 
 const encrypt = (text) => {
-    const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+    const cipher = crypto.createCipheriv(algorithm, randomKey, iv);
 
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
 
@@ -18,7 +17,7 @@ const encrypt = (text) => {
 
 const decrypt = (hash) => {
 
-    const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'));
+    const decipher = crypto.createDecipheriv(algorithm, randomKey, Buffer.from(hash.iv, 'hex'));
 
     const decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
 

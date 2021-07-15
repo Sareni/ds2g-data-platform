@@ -1,15 +1,15 @@
 const mysql = require('mysql');
-const { dbConfigs, AVAILABELE_DATABASES } = require('../config/keys');
+const { mysql: mysqlConfig, mongodb: mongodbConfig, AVAILABELE_TRACKING_DATABASES } = require('../config/ds2g_data_platform_config').databases;
 const { accountKeyToName } = require('./superset');
 
 let connection;
 
 function initMySQLTrackDBConnections() {
     connection = mysql.createConnection({
-        host:     dbConfigs.mysql.host,
-        user:     dbConfigs.mysql.username,
-        password: dbConfigs.mysql.password,
-        database: dbConfigs.mysql.database,
+        host:     mysqlConfig.host,
+        user:     mysqlConfig.username,
+        password: mysqlConfig.password,
+        database: mysqlConfig.database,
       });
       console.log('MySQL connecting...');
 

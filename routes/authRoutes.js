@@ -7,7 +7,7 @@ const requireLogin = require('../middlewares/requireLogin');
 const requireBearerAuthentication = require('../middlewares/requireBearerAuthentication');
 const requireClientAuthentication = require('../middlewares/requireClientAuthentication');
 const oauth2Service = require('../services/oauth2.js');
-const keys = require('../config/keys');
+const { ownAuth} = require('../config/ds2g_data_platform_config').authKeys;
 const { accountKeyToName } = require('../services/superset');
 const User = mongoose.model('users');
 
@@ -52,24 +52,7 @@ module.exports = (app) => {
 
     app.get('/api/current_user', async (req, res) => {
         if (req.user && req.user._id) {
-            const { account } = await getUserDetails(req.user._id);
-
-            let encryptedData;
-            let key = '';
-            let iv = '';
-            if (account) {
-                encryptedData = encrypt(account);
-                key =  encryptedData.content;
-                iv = encryptedData.iv;
-            }
-            let userUpdate = {
-                shinyKey: {
-                    key,
-                    iv 
-                }
-            }
-            _.merge(userUpdate, req.user);
-            return res.send(userUpdate);
+            return res.send(req.user);
         }
         res.send();
     });
@@ -98,7 +81,7 @@ module.exports = (app) => {
     app.get('/api/oauth2/authorize', requireLogin, async (req, res) => {
         const { response_type, client_id, redirect_uri, scope, state, nonce} = req.query;
 
-        if (client_id !== keys.client_id) {
+        if (client_id !== ownAuth.clientID) {
             res.status(404).end('Client ID not found!');
             return;
         }
