@@ -28,7 +28,7 @@ async function initTrackDBConnections() {
 }
 
 async function createMySQLTrackinatorView(name, accountKey) {
-    const query = `CREATE VIEW \`${name}\` AS (SELECT track_date, application, type FROM tracks WHERE account="${accountKey}")`;
+    const query = `CREATE VIEW \`${name}\` AS (SELECT track_date, application, type, value, cur_date FROM tracks WHERE account="${accountKey}")`;
     return new Promise((resolve) => {
         connection.query(query, function(error, results, fields) {
             if(error) {
