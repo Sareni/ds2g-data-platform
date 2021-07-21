@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 
 // https://codepen.io/vaskopetrov/pen/amxvrY
 
+
+
+// TODO USE Materialize SWITCHES INSTEAD
+
 const SignupForm = () => {
     return (
         <div class="container">
@@ -18,7 +22,7 @@ const SignupForm = () => {
                         </div>
                         <div class="input-field col s12">
                             <label>
-                                <input id='cbDemoData' name='cbDemoData' type="checkbox" />
+                                <input id='cbDemoData' name='cbDemoData' type="checkbox" /> 
                                 <span>Demo-Daten anzeigen</span>
                             </label>
                         </div>

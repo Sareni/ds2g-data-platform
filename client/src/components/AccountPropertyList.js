@@ -12,8 +12,8 @@ class AccountDataList extends Component {
             return (
                 <div className='card white' style={{margin: '30px 0px'}}>
                     <div className='card-content'>
+                        <p style={{color: 'grey'}}>{ data.title }</p>
                         <span className='card-title'>{data.value}</span>
-                        <p>{ data.title }</p>
                     </div>
                 </div>
             );

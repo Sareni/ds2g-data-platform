@@ -49,16 +49,16 @@ async function createSupersetDataset(name, alias, database, authToken) {
         const createResponse = await axios.post(`${apiURL}/dataset/`, {
             database,
             owners: [1],
-            schema: "",
+            schema: "tracking",
             custom_label: alias,
             table_name: name,
-            // sql: `SELECT * FROM ${name}` // Unknown Field
+            // sql: `SELECT * FROM \`${name}\`` // Unknown Field
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
         });
 
         const updateResponse = await axios.put(`${apiURL}/dataset/${createResponse.data.id}`, {
-            sql: `SELECT * FROM ${name}`
+            sql: `SELECT * FROM \`${name}\``
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
         });
