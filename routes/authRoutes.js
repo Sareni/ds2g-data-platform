@@ -89,9 +89,13 @@ module.exports = (app) => {
             res.status(404).end('Response Type not found!');
             return;
         }
+        let checkedRedirectURI = redirect_uri;
+        if (checkedRedirectURI.startsWith('http://')) {
+            checkedRedirectURI = `https://${checkedRedirectURI.slice(7)}`;
+        }
 
-        const code = await oauth2Service.createNewCode(client_id, redirect_uri, req.user._id);
-        res.redirect(`${redirect_uri}?code=${code.value}&state=${state}`);
+        const code = await oauth2Service.createNewCode(client_id, checkedRedirectURI, req.user._id);
+        res.redirect(`${checkedRedirectURI}?code=${code.value}&state=${state}`);
     });
 
     app.post('/api/oauth2/token', requireClientAuthentication, async (req, res) => {
