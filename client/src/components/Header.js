@@ -34,7 +34,7 @@ class Header extends Component {
                     <li><Link to="/projects">Projekte</Link></li>,
                     <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
                     <li><a href='/preferences'><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>build</i></a></li>,
-                    <li><a href="#!"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>account_circle</i></a></li>,
+                    <li><a href="/account"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>account_circle</i></a></li>,
                     <li><a href="/api/logout"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>logout</i></a></li>,
                 ];
         }

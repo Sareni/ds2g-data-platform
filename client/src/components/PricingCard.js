@@ -1,9 +1,9 @@
 import React from 'react';
-import testImg from './test.jpg';
+import testImg from './images/bg_demo.png';
 
 const PricingCard = () => {
     return (
-        <div class="col s12 m6 l4">
+        <div class="col s12 m6 l6">
             <div class="card">
                 <div class="card-content">
                 <span class="card-title">Card Title</span>

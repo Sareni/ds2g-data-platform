@@ -1,5 +1,5 @@
 import React from 'react';
-import testImg from './test.jpg';
+import testImg from './images/bg_demo.png';
 
 const ProjectCard = () => {
     return (

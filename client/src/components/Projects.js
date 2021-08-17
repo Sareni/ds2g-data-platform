@@ -1,10 +1,10 @@
 import React from 'react';
-import testImg from './test.jpg';
+import testImg from './images/bg_demo.png';
 import ProjectCard from './ProjectCard';
 
 const Projects = () => {
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div class="container" style={{ textAlign: 'center' }}>
             <h1>
             Projects
             </h1>
