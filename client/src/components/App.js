@@ -16,10 +16,17 @@ import Login from './Login';
 import Account from './Account';
 import SurveyNew from './surveys/SurveyNew';
 import Preferences from './Preferences';
+import NewsBlog from './NewsBlog';
+import ResetPassword from './ResetPassword';
+import ResetPasswordInfo from './ResetPasswordInfo';
+import NewPassword from './NewPassword';
+import NewPasswordInfo from './NewPasswordInfo';
 
 class App extends Component {
     componentDidMount() {
-        this.props.fetchUser();
+        //this.props.fetchUser();
+        //this.props.fetchMessageData();
+        this.props.fetchUserAndMessageData();
     }
 
     render() {
@@ -40,6 +47,11 @@ class App extends Component {
                         <Route exact path='/login' component={Login}/>
                         <Route exact path='/account' component={Account}/>
                         <Route exact path='/surveys/new' component={SurveyNew}/>
+                        <Route exact path='/documentation/news-blog' component={NewsBlog}/>
+                        <Route exact path='/resetpassword' component={ResetPassword}/>
+                        <Route exact path='/resetpasswordinfo' component={ResetPasswordInfo}/>
+                        <Route exact path='/newpassword' component={NewPassword}/>
+                        <Route exact path='/newpasswordinfo' component={NewPasswordInfo}/>
                     </div>
                 </div>
             </BrowserRouter>

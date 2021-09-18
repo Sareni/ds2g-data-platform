@@ -10,7 +10,7 @@ const documentationData = [
     {title: 'Card Title', content: 'I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.', href: 'https://datagenerator.ds2g.io', bgImg: testImg},
     {title: 'Card Title', content: 'I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.', href: 'https://datagenerator.ds2g.io', bgImg: testImg},
     {title: 'Card Title', content: 'I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.', href: 'https://datagenerator.ds2g.io', bgImg: testImg},
-    {title: 'Card Title', content: 'I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.', href: 'https://datagenerator.ds2g.io', bgImg: testImg},
+    {title: 'News-Blog', content: 'Im News-Blog werden alle Neuigkeiten zur Platform beschrieben.', href: '/documentation/news-blog', bgImg: testImg},
 ];
 
 
@@ -25,9 +25,9 @@ const renderDocumentation = () => {
 const Documentation = () => {
     return (
         <div class="container" style={{ textAlign: 'center' }}>
-            <h1>
-                Documentation!
-            </h1>
+            <h4>
+                Dokumentation
+            </h4>
             <div class="row">
                 { renderDocumentation() }
             </div>

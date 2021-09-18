@@ -9,11 +9,10 @@ import { Link } from 'react-router-dom';
 
 const SignupForm = () => {
     return (
-        <div class="container">
+        <div>
             <div class="row">
                 <form class="col s12" id="reg-form" action="/api/preferences" method="POST">
                     <div class="row">
-                        <h3>Demo-Daten</h3>
                         <div class="input-field col s12">
                             <label>
                                 <input id='cbTrackinatorData' name='cbTrackinatorData' type="checkbox" />

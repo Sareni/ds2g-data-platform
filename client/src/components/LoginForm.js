@@ -22,7 +22,7 @@ const LoginForm = () => {
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                        <Link to="/" class="grey btn-flat left white-text" style={{ marginRight: '10px' }}>Passwort vergessen?
+                        <Link to="/resetpassword" class="grey btn-flat left white-text" style={{ marginRight: '10px' }}>Passwort vergessen?
                             <i class="material-icons right">email</i>
                         </Link>
                         <button class="btn btn-flat btn-register blue-grey white-text right" type="submit">Login

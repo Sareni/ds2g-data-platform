@@ -27,6 +27,7 @@
     "mongoose": "^5.13.2",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.6.3",
     "nodemon": "^2.0.4",
     "oauth2orize": "^1.11.0",
     "passport": "^0.4.1",

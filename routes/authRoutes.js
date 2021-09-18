@@ -6,9 +6,10 @@ const { getUserDetails } = require('./utils');
 const requireLogin = require('../middlewares/requireLogin');
 const requireBearerAuthentication = require('../middlewares/requireBearerAuthentication');
 const requireClientAuthentication = require('../middlewares/requireClientAuthentication');
-const oauth2Service = require('../services/oauth2.js');
+const oauth2Service = require('../services/oauth2');
 const { ownAuth} = require('../config/ds2g_data_platform_config').authKeys;
 const { accountKeyToName } = require('../services/superset');
+const { resetPassword, changePasswordWithToken } = require('../services/account');
 const User = mongoose.model('users');
 
 module.exports = (app) => {
@@ -24,7 +25,7 @@ module.exports = (app) => {
         '/auth/auth0/callback',
         passport.authenticate('auth0'),
         (req, res) => {
-            res.redirect('/account');
+            res.redirect('/dashboard');
         }
     );
     
@@ -32,7 +33,7 @@ module.exports = (app) => {
         '/auth/google/callback',
         passport.authenticate('google'),
         (req, res) => {
-            res.redirect('/account');
+            res.redirect('/dashboard');
         }
     );
 
@@ -71,12 +72,24 @@ module.exports = (app) => {
     }));
 
     app.post('/auth/login', passport.authenticate('local', {
-            successRedirect: '/account',
+            successRedirect: '/dashboard',
             failureRedirect: '/login',
             failureFlash: true
         }
     ));
 
+    app.post('/auth/resetpassword', async(req, res) => {
+        const { email } = req.body;
+        resetPassword(email); // await is not necessary
+        res.redirect(`/resetpasswordinfo?email=${email}`);
+    });
+
+    app.post('/auth/changepassword', async(req, res) => {
+        const { token, password } = req.body;
+        const result = await changePasswordWithToken(token, password);
+        
+        res.redirect(`/newpasswordinfo?success=${result}`);
+    });
 
     app.get('/api/oauth2/authorize', requireLogin, async (req, res) => {
         const { response_type, client_id, redirect_uri, scope, state, nonce} = req.query;

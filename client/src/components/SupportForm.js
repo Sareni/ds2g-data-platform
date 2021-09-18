@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const SupportForm = () => {
     return (
         <div class="container" style={{ textAlign: 'center' }}>
-            <h1>
-            Support!
-            </h1>
+            <h4>
+                Unterstützung
+            </h4>
             <div class="row">
                 <form class="col s12" id="reg-form">
                     <div class="row">

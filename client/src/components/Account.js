@@ -4,9 +4,9 @@ import AccountPropertyList from './AccountPropertyList';
 const Account = () => {
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1>
-            Account!
-            </h1>
+            <h4>
+            Account
+            </h4>
             <AccountPropertyList />
         </div>
     );

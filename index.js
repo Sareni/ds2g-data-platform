@@ -12,9 +12,11 @@ const proxy = require('./routes/supersetProxy')();
 const { initTrackDBConnections } = require('./services/trackAnythingDB');
 
 require('./models/User');
+require('./models/EMailToken');
 require('./models/Token');
 require('./models/Code');
 require('./models/Survey');
+require('./models/NewsArticle');
 require('./services/passport');
 
 app.use(bodyParser.urlencoded());
@@ -40,6 +42,7 @@ app.use(passport.session()); // sess
 app.use(flash());
 
 require('./routes/authRoutes')(app);
+require('./routes/messageRoutes')(app);
 require('./routes/billingRoutes')(app);
 require('./routes/accountRoutes')(app);
 require('./routes/supersetRoutes')(app);

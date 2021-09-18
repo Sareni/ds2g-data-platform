@@ -5,9 +5,9 @@ import ProjectCard from './ProjectCard';
 const Projects = () => {
     return (
         <div class="container" style={{ textAlign: 'center' }}>
-            <h1>
-            Projects
-            </h1>
+            <h4>
+                Projekte
+            </h4>
             <div class="row">
                 <ProjectCard />
                 <ProjectCard />

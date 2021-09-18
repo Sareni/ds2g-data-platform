@@ -5,9 +5,9 @@ import ThirdPartyLoginForm from './ThirdPartyLoginForm';
 const Signup = () => {
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1>
-            Signup!
-            </h1>
+            <h4>
+                Annmelden
+            </h4>
             <SignupForm />
             <ThirdPartyLoginForm />
         </div>

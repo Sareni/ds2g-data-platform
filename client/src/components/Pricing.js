@@ -3,7 +3,7 @@ import PricingCard from './PricingCard';
 import testImg from './images/bg_demo.png';
 
 const documentationData = [
-    {title: 'Private Nutzung', content: 'Mit diesem Tool können Sie Demo-Daten in Ihre persönliche Datenspace einfügen. Die Eingabe ist einfach und übersichtlich gestaltet.', href: 'https://datagenerator.ds2g.io', hrefText: 'Spenden', bgImg: demoToolBg,},
+    {title: 'Private Nutzung', content: 'Mit diesem Tool können Sie Demo-Daten in Ihre persönliche Datenspace einfügen. Die Eingabe ist einfach und übersichtlich gestaltet.', href: 'https://datagenerator.ds2g.io', hrefText: 'Spenden', bgImg: testImg,},
     {title: 'Kommerzielle Nutzung', content: 'I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.', href: 'https://datagenerator.ds2g.io', hrefText: 'Anfrage erstellen', bgImg: testImg},
 ];
 
@@ -19,9 +19,9 @@ const renderPricing = () => {
 const Pricing = () => {
     return (
         <div class="container" style={{ textAlign: 'center' }}>
-            <h1>
-            Pricing!
-            </h1>
+            <h4>
+                Preise
+            </h4>
             <div class="row">
                 { renderPricing() }
             </div>
