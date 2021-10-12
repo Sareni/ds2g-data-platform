@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_SURVEYS, SHOW_PAYMENT_DIALOG, HIDE_PAYMENT_DIALOG, FETCH_ACCOUNT_DATA, FETCH_MESSAGE_DATA, SHOW_MESSAGE_DIALOG, HIDE_MESSAGE_DIALOG } from './types';
+import { FETCH_USER, FETCH_SURVEYS, SHOW_PAYMENT_DIALOG, HIDE_PAYMENT_DIALOG, FETCH_ACCOUNT_DATA, FETCH_MESSAGE_DATA, FETCH_SHARE_DATA, SHOW_MESSAGE_DIALOG, HIDE_MESSAGE_DIALOG, FETCH_FLASH_MESSAGE } from './types';
 
 export const fetchUser = () => async dispatch => {
     const res = await axios.get('/api/current_user');
@@ -33,9 +33,12 @@ export const fetchAccountData = () => async dispatch => {
 
 export const fetchMessageData = () => async dispatch => {
     const res = await axios.get('/api/messageDetails');
-    console.log('message', res);
-
     return dispatch({ type: FETCH_MESSAGE_DATA, payload: res.data });
+};
+
+export const fetchShareData = () => async dispatch => {
+    const res = await axios.get('/api/shareDetails');
+    return dispatch({ type: FETCH_SHARE_DATA, payload: res.data });
 };
 
 export const showPaymentDialog = () => dispatch => {
@@ -59,4 +62,9 @@ export const fetchUserAndMessageData = () => async dispatch => {
     if (user.payload) {
         await dispatch(fetchMessageData());
     };
+};
+
+export const fetchFlashMessage = () => async dispatch => {
+    const res = await axios.get('/api/flashMessages');
+    return dispatch({ type: FETCH_FLASH_MESSAGE, payload: res.data });
 };

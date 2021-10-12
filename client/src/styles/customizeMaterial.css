@@ -15,3 +15,52 @@
 .tabs .tab a:focus, .tabs .tab a:focus.active {
     background-color:rgba(0, 0, 0, 0.0)
 }
+
+.propertiesShareAccountBox {
+    margin: 80px 0;
+    text-align: left;
+}
+
+.propertiesShareAccountBox > div > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+.propertiesShareAccountBox > div > div > div, .propertiesShareAccountBox > div > div > input[type=text]:not(.browser-default) {
+    display: inline-block;
+    margin: 0 20px;
+    flex: 1;
+}
+
+.customInfoBox {
+    display: block;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    animation: fadeIn linear 0.5s;
+    width: 400px;
+    height: 62px;
+    padding: 20px;
+    margin: 10px auto;
+    font-size: 14px;
+}
+
+.customErrorBox {
+    display: block;
+    border: 1px solid #F00;
+    border-radius: 10px;
+    animation: fadeIn linear 0.5s;
+    width: 400px;
+    height: 62px;
+    padding: 20px;
+    margin: 10px auto;
+    font-size: 14px;
+
+}
+
+
+@keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+  

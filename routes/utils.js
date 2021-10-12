@@ -4,9 +4,12 @@ const accountManagementServerURI = `${accountManagementServer.protocol}://${acco
 
 const getUserDetails = async (userId) => {
     try {
-        const { data } = await axios.get(`${accountManagementServerURI}/getAccount/${userId}`);
-        return data;
+        // TODO exception for sub accounts
+        const response = await axios.get(`${accountManagementServerURI}/getAccount/${userId}`);
+
+        return response.data;
     } catch (e) {
+        console.log('error - getUserDetails', e);
         return {account: '', plan: ''}
     }
     

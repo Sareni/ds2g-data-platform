@@ -8,6 +8,14 @@ async function findUnreadMessages(user) {
     return NewsArticle.find({ id: { $nin: readNewsArticles }, releaseDate: { $gte: created }, releaseDate: { $lte: new Date() } }).sort({ releaseDate: 'desc', id: 'desc' }); // , releaseDate: { $gte: created }
 }
 
+async function findSharedAccounts(user) {
+    const {subAccounts} = await User.findById(user._id, { subAccounts: 1}).populate('subAccounts').exec();
+    return subAccounts.map(subAccount => ({
+        email: subAccount.username,
+        role: subAccount.accountType
+    }));
+}
+
 module.exports = (app) => {
     app.get('/api/messages', async (req, res) => {
         const messages = await NewsArticle.find().sort({ releaseDate: 'desc', id: 'desc' });
@@ -39,5 +47,14 @@ module.exports = (app) => {
         req.user.readNewsArticles.push(req.body.id);
         const user = await User.findOneAndUpdate({ _id: req.user._id }, { readNewsArticles: req.user.readNewsArticles });
         res.send(user);
+    });
+
+    app.get('/api/flashMessages', (req, res) => {  
+        res.send(req.flash());
+    });
+
+    app.get('/api/shareDetails', async (req, res) => {  
+        const sharedAccounts = await findSharedAccounts(req.user);
+        res.send(sharedAccounts);
     });
 }

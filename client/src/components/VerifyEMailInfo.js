@@ -1,14 +1,14 @@
 import React from 'react';
 
-const NewPasswordInfo = (props) => {
+const VerifyEmailInfo = (props) => {
     const success = props.location.search && props.location.search.length && props.location.search.search('success=true') >= 0;
     if (success) {
         return (
             <div style={{ textAlign: 'center' }}>
                 <h4>
-                Neues Passwort vergeben!
+                e-Mail erfolgreich verifiziert!
                 </h4>
-                Sie können sich nun mit Ihrem neuen Passwort anmelden: <a href='/login'>zum Login</a>
+                Sie können sich nun in Ihren Account einloggen: <a href='/login'>zum Login</a>
             </div>
         );
     } else {
@@ -23,4 +23,4 @@ const NewPasswordInfo = (props) => {
     } 
 };
 
-export default NewPasswordInfo;
+export default VerifyEmailInfo;

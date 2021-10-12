@@ -9,7 +9,9 @@ const requireClientAuthentication = require('../middlewares/requireClientAuthent
 const oauth2Service = require('../services/oauth2');
 const { ownAuth} = require('../config/ds2g_data_platform_config').authKeys;
 const { accountKeyToName } = require('../services/superset');
-const { resetPassword, changePasswordWithToken } = require('../services/account');
+const { resetPassword, createSubAccounts, changePasswordWithToken, verifyEMail } = require('../services/account');
+const requireTypeUser = require('../middlewares/requireTypeUser');
+const requireReCaptcha = require('../middlewares/requireReCaptcha');
 const User = mongoose.model('users');
 
 module.exports = (app) => {
@@ -58,7 +60,7 @@ module.exports = (app) => {
         res.send();
     });
 
-    app.post('/auth/signup', passport.authenticate('local-signup', {
+    app.post('/auth/signup',  requireReCaptcha, passport.authenticate('local-signup', {
         successRedirect: '/',
         failureRedirect: '/signup',
         failureFlash: {
@@ -71,24 +73,32 @@ module.exports = (app) => {
         }
     }));
 
-    app.post('/auth/login', passport.authenticate('local', {
+    app.post('/auth/login', requireReCaptcha, /* (req, res, next) => {setTimeout(next, 6000)}, */ passport.authenticate('local', {
             successRedirect: '/dashboard',
             failureRedirect: '/login',
             failureFlash: true
         }
     ));
 
-    app.post('/auth/resetpassword', async(req, res) => {
+    app.post('/auth/resetpassword', requireReCaptcha, async(req, res) => {
         const { email } = req.body;
         resetPassword(email); // await is not necessary
         res.redirect(`/resetpasswordinfo?email=${email}`);
     });
 
-    app.post('/auth/changepassword', async(req, res) => {
+
+    app.post('/auth/changepassword', requireReCaptcha, async(req, res) => {
         const { token, password } = req.body;
         const result = await changePasswordWithToken(token, password);
         
         res.redirect(`/newpasswordinfo?success=${result}`);
+    });
+
+    app.get('/api/verifyemail', async(req, res) => {
+        const { token } = req.query;
+        const result = await verifyEMail(token);
+        
+        res.redirect(`/verifyemailinfo?success=${result}`);
     });
 
     app.get('/api/oauth2/authorize', requireLogin, async (req, res) => {
@@ -102,6 +112,7 @@ module.exports = (app) => {
             res.status(404).end('Response Type not found!');
             return;
         }
+        
         let checkedRedirectURI = redirect_uri;
         if (checkedRedirectURI.startsWith('http://')) {
             checkedRedirectURI = `https://${checkedRedirectURI.slice(7)}`;
@@ -124,12 +135,11 @@ module.exports = (app) => {
             return;
         }
 
-        const { account } = await getUserDetails(req.user.userId);
-
         const responseObject = {
-            'username': accountKeyToName(account),
-            'email': accountKeyToName(account)
+            'username': user.username,
+            'email': user.username // TODO real email
         }
+
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(responseObject));
     });

@@ -8,6 +8,7 @@ const { connectionString } = require('./config/ds2g_data_platform_config').datab
 const { key: cookiesKey } = require('./config/ds2g_data_platform_config').cookies;
 const app = express();
 const proxy = require('./routes/supersetProxy')();
+//const timeout = require('connect-timeout');
 
 const { initTrackDBConnections } = require('./services/trackAnythingDB');
 
@@ -40,13 +41,24 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); // sess
 app.use(flash());
+//app.use(timeout('4s'));
+
+
+/* const haltOnTimeout = (req, res, next) => {
+    if(!req.timeout) {
+        next();
+    }
+}
+app.use(haltOnTimeout);*/
 
 require('./routes/authRoutes')(app);
+require('./routes/fileRoutes')(app);
 require('./routes/messageRoutes')(app);
 require('./routes/billingRoutes')(app);
 require('./routes/accountRoutes')(app);
 require('./routes/supersetRoutes')(app);
 require('./routes/preferencesRoutes')(app);
+require('./routes/supportRoutes')(app);
 
 mongoose.connect(connectionString, { useNewUrlParser: true });
 initTrackDBConnections();

@@ -21,6 +21,8 @@ import ResetPassword from './ResetPassword';
 import ResetPasswordInfo from './ResetPasswordInfo';
 import NewPassword from './NewPassword';
 import NewPasswordInfo from './NewPasswordInfo';
+import SupportInfo from './SupportInfo';
+import VerifyEmailInfo from './VerifyEMailInfo';
 
 class App extends Component {
     componentDidMount() {
@@ -52,6 +54,8 @@ class App extends Component {
                         <Route exact path='/resetpasswordinfo' component={ResetPasswordInfo}/>
                         <Route exact path='/newpassword' component={NewPassword}/>
                         <Route exact path='/newpasswordinfo' component={NewPasswordInfo}/>
+                        <Route exact path='/supportinfo' component={SupportInfo}/>
+                        <Route exact path='/verifyemailinfo' component={VerifyEmailInfo}/>
                     </div>
                 </div>
             </BrowserRouter>

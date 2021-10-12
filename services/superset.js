@@ -1,13 +1,15 @@
 const axios = require('axios');
 const { exec } = require('child_process');
 const { config } = require('process');
+const { uid } = require('../routes/utils');
 const { superset: supersetConfig } = require('../config/ds2g_data_platform_config');
 
 const { createChartObject } = require('./supersetChartBuilder');
 const { createDashboardObject } = require('./supersetDashboardBuilder');
 
-// TODO: remove!!
-const testPw = supersetConfig.defaultPasswordNewUser;
+const mongoose = require('mongoose');
+
+const TRACKINATOR_DATABASE = 2;
 const apiURL = `${supersetConfig.protocol}://${supersetConfig.host}:${supersetConfig.port}${supersetConfig.apiPath}`;
 
 const DEMO_CONTENT_TYPES = {
@@ -44,14 +46,14 @@ async function userLoginToSuperset(username, password) {
     }
 }
 
-async function createSupersetDataset(name, alias, database, authToken) {
+async function createSupersetDataset(tableName, alias, database, authToken) {
     try {
         const createResponse = await axios.post(`${apiURL}/dataset/`, {
             database,
             owners: [1],
             schema: "tracking",
             custom_label: alias,
-            table_name: name,
+            table_name: tableName,
             // sql: `SELECT * FROM \`${name}\`` // Unknown Field
         }, {
             headers: { Authorization: `Bearer ${authToken}`}
@@ -85,18 +87,21 @@ async function updateSupersetDatasetOwners(datasetId, newOwners, authToken) {
     }
 }
 
-async function createSupersetAccount(name, pw, datasets, authToken) {
+async function createSupersetAccount(key, email, password, type, datasets, authToken) {
     let datasourceIds = [];
     let datasourceNames = [];
     datasets.forEach((d) => {
         datasourceIds.push(d.id);
-        datasourceNames.push(d.alias);
+        datasourceNames.push(d.name);
     });
 
     try {
         const res = await axios.post(`${apiURL}/security/create_ta_user/`, {
-            username: name,
-            password: pw,
+            key,
+            username: email, // TODO get model username?
+            email,
+            password,
+            type,
             datasourceIds: datasourceIds.join(','),
             datasourceNames: datasourceNames.join(','),
         }, {
@@ -266,34 +271,67 @@ async function createDemoContent(userId, datasetIds, authToken, type = DEMO_CONT
     switch(type) {
         case DEMO_CONTENT_TYPES.BASIC: await createBasicSupersetContent(userId, datasetIds[0], authToken); break;
         case DEMO_CONTENT_TYPES.ADVANCED: await createAdvancedSupersetContent(userId, datasetIds, authToken); break;
-        case DEMO_CONTENT_TYPES.NONE:
+        case DEMO_CONTENT_TYPES.NONE: // TODO good practice?
         default: createNoSupersetContent();
     }
 }
 
-async function initUserInSuperset(accountKey, pw=testPw, demoContentType) { // TODO: remove testPw
+async function createDatasetsForMainAccount(keyName, email, adminAuthToken) {
+    const trackinatorDatasetName = keyName;
+    const demoDatasetName = `${keyName}_demo`;
+    const trackinatorDatasetId = await createSupersetDataset(trackinatorDatasetName, 'Tracks', TRACKINATOR_DATABASE, adminAuthToken);
+    const demoDatasetId = await createSupersetDataset(demoDatasetName, 'Demo', TRACKINATOR_DATABASE, adminAuthToken);
+
+    const datasets = [{
+        id: trackinatorDatasetId,
+        name: demoDatasetName
+    }, {
+        id: demoDatasetId,
+        name: demoDatasetName
+    }];
+
+    const existingUser = await User.findOne({ username: email });
+    if(!existingUser.datasets) {
+        existingUser.datasets = []
+    }
+    existingUser.datasets.push(...datasets);
+    console.log('existing user', existingUser);
+
+    await existingUser.save();
+
+    return datasets;
+}
+
+async function initMainAccountInSuperset(keyName, email, password, supersetAccountType, adminAuthToken) {
+    const datasets = await createDatasetsForMainAccount(keyName, email, adminAuthToken);
+    const userId = await createSupersetAccount(keyName, email, password, supersetAccountType, datasets, adminAuthToken);
+
+    for(const dataset of datasets) {
+        await updateSupersetDatasetOwners(dataset.id, [1, userId], adminAuthToken);
+    }
+
+    const userAuthToken = await userLoginToSuperset(email, password);
+    await createDemoContent(userId, [trackinatorDatasetId, demoDatasetId], userAuthToken, demoContentType);
+}
+
+async function initSubAccountInSuperset(keyName, email, password, supersetAccountType, mainEmail, adminAuthToken) {
+    const User = mongoose.model('users');
+    const existingUser = await User.findOne({ username: mainEmail });
+    const userId = await createSupersetAccount(keyName, email, password, supersetAccountType, existingUser.datasets, adminAuthToken);
+}
+
+async function initUserInSuperset(accountKey, email, accountType='user', mainEmail) { // TODO: remove testPw
+    const password = uid(64);
+    const keyName = accountKeyToName(accountKey);
+
     try {
-        console.log('start');
-        const name = accountKeyToName(accountKey);
         const adminAuthToken = await adminLoginToSuperset();
-
-        console.log('init', adminAuthToken);
-
-        const TRACKINATOR_DATABASE = 2;
-        const trackinatorDatasetId = await createSupersetDataset(name, 'Tracks', TRACKINATOR_DATABASE, adminAuthToken);
-        const demoDatasetId = await createSupersetDataset(`${name}_demo`, 'Demo', TRACKINATOR_DATABASE, adminAuthToken);
-        //const combinedDemoDatasetId = `0-${demoDatasetId}`; // TODO alias should be used instead
-        console.log('datasets');
-
-        const userId = await createSupersetAccount(name, pw, [{id: trackinatorDatasetId, alias: name}, {id: demoDatasetId, alias: `${name}_demo`}], adminAuthToken);
-        console.log('account');
-
-        updateSupersetDatasetOwners(trackinatorDatasetId, [1, userId], adminAuthToken);
-        updateSupersetDatasetOwners(demoDatasetId, [1, userId], adminAuthToken);
-        console.log('update');
-
-        const userAuthToken = await userLoginToSuperset(name, pw);
-        await createDemoContent(userId, [trackinatorDatasetId, demoDatasetId], userAuthToken, demoContentType);
+        switch(accountType) {
+            case 'admin': await initMainAccountInSuperset(keyName, email, password, 'admin', adminAuthToken); break;
+            case 'subadmin': await initSubAccountInSuperset(keyName, email, password, 'user', mainEmail, adminAuthToken); break;
+            case 'subuser': await initSubAccountInSuperset(keyName, email, password, 'sub', mainEmail, adminAuthToken); break;
+            default /* 'user' */: await initMainAccountInSuperset(keyName, email, password, 'user', adminAuthToken); break;
+        }
         console.log('Superset User is ready!');
     } catch (e) {
         console.log(e);
@@ -301,7 +339,7 @@ async function initUserInSuperset(accountKey, pw=testPw, demoContentType) { // T
 }
 
 function accountKeyToName(accountKey) {
-    return accountKey.replaceAll('-', '3');
+    return accountKey.replace(/-/g, '3');
 }
 
 module.exports = {

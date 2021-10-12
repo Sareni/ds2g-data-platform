@@ -2,7 +2,7 @@ import React from 'react';
 import LoginForm from './LoginForm';
 import ThirdPartyLoginForm from './ThirdPartyLoginForm';
 
-const Login = () => {
+const Login = (props) => {
     return (
         <div style={{ textAlign: 'center' }}>
             <h4>

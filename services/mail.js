@@ -20,7 +20,6 @@ const supportTransporter = nodemailer.createTransport({
     },
 });
 
-
 async function sendMail(transporter, options) {
     try {
         await transporter.sendMail(options); // const info = 
@@ -29,28 +28,10 @@ async function sendMail(transporter, options) {
     }
 }
 
-
-async function sendVerificationMail() {
+async function sendVerificationMail(email, token) {
     const from = 'noreply@ds2g.io';
-    const {
-        to,
-        subject,
-        text
-    } = options;
-
-    const mailOptions = {
-        from,
-        to,
-        subject,
-        text
-    }
-    await sendMail(noreplyTransporter, mailOptions);
-}
-
-async function sendPasswordResetMail(email, token) {
-    const from = 'noreply@ds2g.io';
-    const subject = `Passwort zurücksetzen`;
-    const content = `Link zum Zurücksetzen Ihres Passworte: https://dataplatform.ds2g.io/newpassword?token=${token}`;
+    const subject = 'eMail verifizieren';
+    const content = `Bitte verifizieren Sie Ihre e-Mail-Adresse indem Sie auf folgenen Link klicken: https://dataplatform.ds2g.io/api/verifyemail?token=${token}`;
 
     const mailOptions = {
         from,
@@ -61,13 +42,42 @@ async function sendPasswordResetMail(email, token) {
     await sendMail(noreplyTransporter, mailOptions);
 }
 
-async function sendSupportFormMail() {
-    const from = 'support@ds2g.io';
-    const {
-        to,
+async function sendPasswordResetMail(email, token) {
+    const from = 'noreply@ds2g.io';
+    const subject = `Passwort zurücksetzen`;
+    const content = `Link zum Zurücksetzen Ihres Passworte: https://dataplatform.ds2g.io/newpassword?token=${token}`; // TODO <a href=https://dataplatform.ds2g.io/newpassword?token=${token}`>Passwort zurücksetzen</a>
+
+    const mailOptions = {
+        from,
+        to: email,
         subject,
-        text
-    } = options;
+        text: content
+    }
+    await sendMail(noreplyTransporter, mailOptions);
+}
+
+async function sendSubAccountInviteMail(mainEmail, email, token) {
+    const from = 'noreply@ds2g.io';
+    const subject = `Einlandung zur DS2G Dataplatform`;
+    const content = `Sie wurden von ${mainEmail} zu seiner DS2G Dataplatform eingeladen. Link zum Anlegen eines Passwortes: https://dataplatform.ds2g.io/newpassword?token=${token}`; // TODO <a href=https://dataplatform.ds2g.io/newpassword?token=${token}`>Passwort zurücksetzen</a>
+
+    const mailOptions = {
+        from,
+        to: email,
+        subject,
+        text: content
+    }
+    await sendMail(noreplyTransporter, mailOptions);
+}
+
+async function sendSupportFormMail(email, name, message) {
+    const from = 'support@ds2g.io';
+    const to   = 'support@ds2g.io';
+
+    // TODO verify email, special characters
+
+    const subject = `Supportanfrage von ${email}`;
+    const text = `${name}(${email}) schreibt:\n\n${message}`
 
     const mailOptions = {
         from,
@@ -83,5 +93,6 @@ async function sendSupportFormMail() {
 module.exports = {
     sendVerificationMail,
     sendPasswordResetMail,
+    sendSubAccountInviteMail,
     sendSupportFormMail
 }

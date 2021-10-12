@@ -23,6 +23,9 @@ const accountManagementServerURI = `${accountManagementServer.protocol}://${acco
 // TODO: passport-local-mongoose
 
 const User = mongoose.model('users');
+const { sendVerificationMail } = require('./mail');
+const { uid } = require('../routes/utils');
+const EMailToken = mongoose.model('emailtokens');
 
 
 async function createTrackingAccount(userId, plan) {
@@ -34,9 +37,9 @@ async function createTrackingAccount(userId, plan) {
 }
 
 
-async function createSupersetAccount(accountKey) {
+async function createSupersetAccount(accountKey, email) {
   await addTrackDBViewForNewUser(accountKey);
-  await initUserInSuperset(accountKey, undefined, DEMO_CONTENT_TYPES.ADVANCED);
+  await initUserInSuperset(accountKey, email);
 }
 
 /* passport.serializeUser((user, done) => {
@@ -73,7 +76,7 @@ passport.use(
 
       const user = await new User({ username: profile.username }).save();
       // const trackingAccount = await createTrackingAccount(user.id, null);
-      // createSupersetAccount(trackingAccount.account);
+      // createSupersetAccount(trackingAccount.account, !!!!! email !!!!!);
 
       done(null, user);
     }
@@ -97,7 +100,7 @@ passport.use(
 
       const user = await new User({ googleId: profile.id }).save();
       const trackingAccount = await createTrackingAccount(user.id, null);
-      createSupersetAccount(trackingAccount.account);
+      createSupersetAccount(trackingAccount.account, 'test@test.com'); // TODO email
 
       done(null, user);
     }
@@ -116,9 +119,12 @@ passport.use(
 
       if (existingUser) {
         if (!bcrypt.compareSync(password, existingUser.passwordHash)) {
-          // wrong password
-          console.log('wrong password');
-          return done(null, false);
+          // Incorrect password
+          return done(null, false, { message: 'Falscher Benutzername oder falsches Passwort!' });
+        }
+        if (!existingUser.emailVerified) {
+           // email not verified
+           return done(null, false,  { message: 'Bitte verifizieren Sie zuerst Ihre e-Mail-Adresse!' });
         }
         // return user
         console.log('return user');
@@ -126,8 +132,7 @@ passport.use(
       }
       
       // user not found
-      console.log('user not found');
-      return done(null, false); 
+      return done(null, false,  { message: 'Falscher Benutzername oder falsches Passwort!' }); 
     }
   )
 );
@@ -150,8 +155,16 @@ async (req, email, password, done) => {
   });
   
   const trackingAccount = await createTrackingAccount(newUser.id, null);
-  createSupersetAccount(trackingAccount.account);
+  createSupersetAccount(trackingAccount.account, email);
 
+  const token = await new EMailToken({
+      value: uid(64),
+      email,
+      valid: true,
+  }).save();
+
+  sendVerificationMail(email, token.value);
+  
   // save the user_id to the req.user property
   return done(null, newUser);
 }

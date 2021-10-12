@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
+import CsvUploadForm from './CsvUploadForm';
 import PreferencesForm from './PreferencesForm';
 import MessageForm from './MessageForm';
+import ShareForm from './ShareForm';
 import M from 'materialize-css';
 import { connect } from 'react-redux';
 
-const DemoDataTab = (props) => {
+const GeneralSettingsTab = (props) => {
     const id = `tab${props.id}`;
     if(!props.accountType) return;
     if(props.tab) {
             // return the tab-code
         return (
-            <li class="tab col s4"><a class='active blue-grey-text' href={`#${id}`}>Demo Daten</a></li>
+            <li class="tab col s3"><a class='active blue-grey-text' href={`#${id}`}>Allgemein</a></li>
         )
     } else {
     // return the tab's content code
@@ -22,13 +24,49 @@ const DemoDataTab = (props) => {
     }
 }
 
-const MessageTab = (props) => {
+const DataTab = (props) => {
     const id = `tab${props.id}`;
-    if(!props.accountType) return; // !== 'admin'
+    if(!props.accountType) return;
     if(props.tab) {
             // return the tab-code
         return (
-            <li class="tab col s4"><a class='active blue-grey-text' href={`#${id}`}>Nachrichten</a></li>
+            <li class="tab col s3"><a class='active blue-grey-text' href={`#${id}`}>Daten</a></li>
+        )
+    } else {
+    // return the tab's content code
+    return (
+            <div id={id} class="col s12">
+                <CsvUploadForm />
+            </div>
+        )
+    }
+}
+
+const ShareTab = (props) => {
+    const id = `tab${props.id}`;
+    if(!props.accountType || (props.accountType !== 'admin' && props.accountType !== 'user')) return "";
+    if(props.tab) {
+            // return the tab-code
+        return (
+            <li class="tab col s3"><a class='active blue-grey-text' href={`#${id}`}>Freigabe</a></li>
+        )
+    } else {
+    // return the tab's content code
+    return (
+            <div id={id} class="col s12">
+                <ShareForm />
+            </div>
+        )
+    }
+}
+
+const MessageTab = (props) => {
+    const id = `tab${props.id}`;
+    if(!props.accountType || props.accountType !== 'admin') return "";
+    if(props.tab) {
+            // return the tab-code
+        return (
+            <li class="tab col s3"><a class='active blue-grey-text' href={`#${id}`}>Nachrichten</a></li>
         )
     } else {
     // return the tab's content code
@@ -48,12 +86,16 @@ const createContent = (authProps) => {
         <div class="row">
                 <div class="col s12">
                 <ul class="tabs">
-                    <DemoDataTab accountType={authProps.accountType} id='1' tab />
-                    <MessageTab accountType={authProps.accountType} id='2' tab />
+                    <GeneralSettingsTab accountType={authProps.accountType} id='1' tab />
+                    <DataTab accountType={authProps.accountType} id='2' tab />
+                    <ShareTab accountType={authProps.accountType} id='3' tab />
+                    <MessageTab accountType={authProps.accountType} id='4' tab />
                 </ul>
                 </div>
-                <DemoDataTab accountType={authProps.accountType} id='1' />
-                <MessageTab accountType={authProps.accountType} id='2' />
+                <GeneralSettingsTab accountType={authProps.accountType} id='1' />
+                <DataTab accountType={authProps.accountType} id='2' />
+                <ShareTab accountType={authProps.accountType} id='3' />
+                <MessageTab accountType={authProps.accountType} id='4' />
                 </div>
                 );
 }
