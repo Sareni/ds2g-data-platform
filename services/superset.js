@@ -314,7 +314,7 @@ async function initMainAccountInSuperset(keyName, email, password, supersetAccou
     }
 
     const userAuthToken = await userLoginToSuperset(email, password);
-    await createDemoContent(userId, [trackinatorDatasetId, demoDatasetId], userAuthToken, demoContentType);
+    await createDemoContent(userId, datasets.map(d => d.id), userAuthToken, demoContentType);
 }
 
 async function initSubAccountInSuperset(keyName, email, password, supersetAccountType, mainEmail, adminAuthToken) {
