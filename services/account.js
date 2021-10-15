@@ -102,7 +102,7 @@ async function createSubAccount(mainUserId, subAccountEmail, subAccountRole, acc
     
     mainUser.subAccounts.push(newUser._id);
     
-    //initUserInSuperset(accountKey, subAccountEmail, subAccountRole, mainUser.username);
+    initUserInSuperset(accountKey, subAccountEmail, subAccountRole, mainUser.username);
     await inviteSubAccount(mainUser.username, subAccountEmail);
     
     await mainUser.save();
