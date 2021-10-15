@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const datasetSchema = new Schema({
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    id: { type: String, required: true },
 });
-
 
 const userSchema = new Schema({
     googleId: String,
