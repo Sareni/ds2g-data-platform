@@ -69,7 +69,8 @@ async function createSupersetDataset(tableName, alias, database, authToken) {
         return updateResponse.data.id;
     }  catch(e) {
         console.log('Error - createSupersetDataset');
-        console.log(e.response.data);
+        console.log(JSON.stringify(e));
+        // console.log(e.response.data);
     }
 }
 
@@ -290,6 +291,7 @@ async function createDatasetsForMainAccount(keyName, email, adminAuthToken) {
         name: demoDatasetName
     }];
 
+    const User = mongoose.model('users');
     const existingUser = await User.findOne({ username: email });
     if(!existingUser.datasets) {
         existingUser.datasets = []
