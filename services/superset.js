@@ -92,6 +92,7 @@ async function createSupersetAccount(key, email, password, type, datasets, authT
     let datasourceIds = [];
     let datasourceNames = [];
     datasets.forEach((d) => {
+        console.log('dataset', d);
         datasourceIds.push(d.id);
         datasourceNames.push(d.name);
     });
