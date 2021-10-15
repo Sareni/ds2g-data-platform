@@ -64,12 +64,12 @@ module.exports = (app) => {
         successRedirect: '/',
         failureRedirect: '/signup',
         failureFlash: {
-            type: 'messageFailure',
-            message: 'Email already taken.'
+            type: 'error',
+            message: 'E-Mail bereits vergeben.'
         },
-        successFlash: {
-            type: 'messageSuccess',
-            message: 'Successfully signed up.'
+        successFlash: { // TODO remove or show in FE?
+            type: 'info',
+            message: 'Registrierung erfolgreich.'
         }
     }));
 

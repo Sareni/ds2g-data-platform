@@ -7,7 +7,7 @@ const User = mongoose.model('users');
 const { uid } = require('../routes/utils');
 const { sendPasswordResetMail, sendSubAccountInviteMail } = require('./mail');
 
-const { initUserInSuperset, DEMO_CONTENT_TYPES } = require('./superset');
+const { initUserInSuperset, DEMO_CONTENT_TYPES, deleteSupersetAccount, deleteSupersetAccounts } = require('./superset');
 
 async function resetPassword(email) {
     // TODO verify that argument is a valid email
@@ -33,6 +33,7 @@ async function removeAccountById(id) {
 
 async function removeAccount(account) {
     // TODO performance, update many
+    // TODO remove account in superset
     if(account.mainAccounts && account.mainAccounts.length > 0) {
         for(const mainAccountId of account.mainAccounts) {
             const user = await User.findById(mainAccountId);
@@ -47,14 +48,19 @@ async function removeAccount(account) {
     if(account.subAccounts && account.subAccounts.length > 0) {
         await removeSubAccounts(account.subAccounts)
     }
+    await deleteSupersetAccount(account.username);
     await User.deleteOne({ _id: account._id});
 }
 
 async function removeSubAccounts(subAccountIds) {
     const subAccounts = await User.find({ _id: {$in: subAccountIds}});
     const onlySubAccountIdsList = subAccounts.filter((subAcc) => { return !subAcc.subAccounts || subAcc.subAccounts.length === 0 }).map((subAcc) => subAcc._id);
+    const onlySubAccountUsernameList = subAccounts.filter((subAcc) => { return !subAcc.subAccounts || subAcc.subAccounts.length === 0 }).map((subAcc) => subAcc.username);
     const mainSubAccountIdsList = subAccounts.filter((subAcc) => { return subAcc.subAccounts && subAcc.subAccounts.length > 0 }).map((subAcc) => subAcc._id);
+    
+    await deleteSupersetAccounts(onlySubAccountUsernameList);
     await User.deleteMany({ _id: {$in: onlySubAccountIdsList}});
+    
     if(mainSubAccountIdsList.length > 0) {
         await removeSubAccounts(mainSubAccountIdsList);
     }

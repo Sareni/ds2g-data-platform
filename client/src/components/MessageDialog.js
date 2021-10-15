@@ -34,6 +34,7 @@ class MessageDialog extends Component {
         const indexNextMessage = indexActiveMessage + 1;
 
         if(e) e.stopPropagation();
+        await this.setActiveMessageAsRead();
 
         if (indexNextMessage >= this.props.messageData.unreadMessages.length) {
             await this.hideMessageDialog();

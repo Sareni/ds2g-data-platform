@@ -286,7 +286,7 @@ async function createDatasetsForMainAccount(keyName, email, adminAuthToken) {
 
     const datasets = [{
         id: trackinatorDatasetId,
-        name: demoDatasetName
+        name: trackinatorDatasetName
     }, {
         id: demoDatasetId,
         name: demoDatasetName
@@ -341,6 +341,28 @@ async function initUserInSuperset(accountKey, email, accountType='user', mainEma
     }
 }
 
+async function deleteAccount(username, authToken) {
+    const res = await axios.post(`${apiURL}/security/delete_ta_user/`, {
+        username
+    }, {
+        headers: { Authorization: `Bearer ${authToken}`}
+    });
+    return;
+}
+
+async function deleteSupersetAccount(username) {
+    const adminAuthToken = await adminLoginToSuperset();
+    await deleteAccount(username, adminAuthToken);
+}
+
+async function deleteSupersetAccounts(usernames) {
+    const adminAuthToken = await adminLoginToSuperset();
+    for(const username of usernames) {
+        await deleteAccount(username, adminAuthToken);
+    }
+}
+
+
 function accountKeyToName(accountKey) {
     return accountKey.replace(/-/g, '3');
 }
@@ -348,5 +370,7 @@ function accountKeyToName(accountKey) {
 module.exports = {
     initUserInSuperset,
     accountKeyToName,
+    deleteSupersetAccount,
+    deleteSupersetAccounts,
     DEMO_CONTENT_TYPES
 }
