@@ -15,8 +15,12 @@ import SupportForm from './SupportForm';
 import Login from './Login';
 import Account from './Account';
 import SurveyNew from './surveys/SurveyNew';
+import AdminPanel from './AdminPanel';
 import Preferences from './Preferences';
 import NewsBlog from './NewsBlog';
+import Forum from './Forum';
+import ForumArticle from './ForumArticle';
+import AddForumArticle from './AddForumArticle';
 import ResetPassword from './ResetPassword';
 import ResetPasswordInfo from './ResetPasswordInfo';
 import NewPassword from './NewPassword';
@@ -43,12 +47,16 @@ class App extends Component {
                         <Route exact path='/documentation' component={Documentation}/>
                         <Route exact path='/pricing' component={Pricing}/>
                         <Route exact path='/projects' component={Projects}/>
-                        <Route exact path='/preferences' component={Preferences}/>
+                        <Route path='/admin' component={AdminPanel}/>
+                        <Route path='/preferences' component={Preferences}/>
                         <Route exact path='/signup' component={Signup}/>
                         <Route exact path='/support' component={SupportForm}/>
                         <Route exact path='/login' component={Login}/>
                         <Route exact path='/account' component={Account}/>
                         <Route exact path='/surveys/new' component={SurveyNew}/>
+                        <Route exact path='/documentation/forum' component={Forum}/>
+                        <Route exact path='/documentation/forum/article' component={ForumArticle}/>
+                        <Route exact path='/documentation/forum/add' component={AddForumArticle}/>
                         <Route exact path='/documentation/news-blog' component={NewsBlog}/>
                         <Route exact path='/resetpassword' component={ResetPassword}/>
                         <Route exact path='/resetpasswordinfo' component={ResetPasswordInfo}/>

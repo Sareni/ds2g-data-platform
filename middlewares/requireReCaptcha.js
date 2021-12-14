@@ -3,7 +3,7 @@ const axios = require('axios');
 const url = 'https://www.google.com/recaptcha/api/siteverify';
 
 module.exports = async (req, res, next) => {
-    /* if (!req.body || !req.body['g-recaptcha-response']) { 
+    if (!req.body || !req.body['g-recaptcha-response']) { 
         return res.status(400).send({ error: 'CAPTCHA not done!' });
     }
 
@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
 
     if (!isHuman) {
         return res.status(400).send({ error: 'You are not a human!'});
-    }*/
+    }
 
     next();
 };

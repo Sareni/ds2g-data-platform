@@ -68,7 +68,22 @@ async function addTrackDBViewForNewUser(accountKey, databaseType = AVAILABELE_TR
     } 
 }
 
+async function insertCsvData(tableKeys, data) {
+    var sql = `INSERT INTO tracks (${tableKeys.join(', ')}) VALUES ?`;
+    return new Promise((resolve) => {
+        connection.query(sql, [data], function(error, results, fields) {
+            if(error) {
+                console.log(error);
+                throw error;
+            }
+            resolve();
+        });
+    });
+    //connection.end();
+}
+
 module.exports = {
     initTrackDBConnections,
-    addTrackDBViewForNewUser
+    addTrackDBViewForNewUser,
+    insertCsvData
 }

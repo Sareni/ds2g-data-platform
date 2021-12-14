@@ -28,45 +28,22 @@ const GeneralSettingsTab = (props) => {
     }
 }
 
-const DataTab = (props) => {
+const MessageTab = (props) => {
     const id = `tab${props.id}`;
-    if(!props.accountType) return;
+    if(!props.accountType || props.accountType !== 'admin') return "";
     if(props.tab) {
             // return the tab-code
         const cssClasses = ['blue-grey-text'];
         if (props.active)
             cssClasses.push('active');
         return (
-            <li class="tab col s3"><a class={cssClasses.join(' ')} href={`#${id}`}>Daten</a></li>
-        )
-    } else {
-        console.log('params', props);
-    // return the tab's content code
-    return (
-            <div id={id} class="col s12">
-                {!props.queryParams && <CsvUploadForm /> }
-                {!!props.queryParams && <CsvImportForm queryParams={props.queryParams}/> }
-            </div>
-        )
-    }
-}
-
-const ShareTab = (props) => {
-    const id = `tab${props.id}`;
-    if(!props.accountType || (props.accountType !== 'admin' && props.accountType !== 'user')) return "";
-    if(props.tab) {
-            // return the tab-code
-        const cssClasses = ['blue-grey-text'];
-        if (props.active)
-            cssClasses.push('active');
-        return (
-            <li class="tab col s3"><a class={cssClasses.join(' ')} href={`#${id}`}>Freigabe</a></li>
+            <li class="tab col s3"><a class={cssClasses.join(' ')} href={`#${id}`}>Nachrichten</a></li>
         )
     } else {
     // return the tab's content code
     return (
             <div id={id} class="col s12">
-                <ShareForm />
+                <MessageForm />
             </div>
         )
     }
@@ -88,32 +65,39 @@ const createContent = (props) => {
             <div class="col s12">
             <ul class="tabs">
                 <GeneralSettingsTab accountType={authProps.accountType} active={tabMatch === 'general'} id='1' tab />
-                <DataTab accountType={authProps.accountType} active={tabMatch === 'data'} id='2' tab />
-                <ShareTab accountType={authProps.accountType} active={tabMatch === 'share'} id='3' tab />
+                <MessageTab accountType={authProps.accountType} active={tabMatch === 'message'} id='2' tab />
             </ul>
             </div>
             <GeneralSettingsTab accountType={authProps.accountType} id='1' />
-            <DataTab accountType={authProps.accountType} queryParams={!!queryParams ? queryParams.substring(1) : ''}  id='2' />
-            <ShareTab accountType={authProps.accountType} id='3' />
+            <MessageTab accountType={authProps.accountType} id='2' />
             </div>
             );
 }
 
-const Preferences = (props) => {
+const renderContent = (props) => {
+    if(!props.accountType || props.accountType !== 'admin') return "";
+    return (
+        <div class="container" style={{ textAlign: 'center' }}>
+            <h4>
+                Admin-Cockpit
+            </h4>
+            { createContent(props) }
+        </div>
+    );
+}
+
+const AdminPanel = (props) => {
     useEffect(() => {
         let elems = document.querySelectorAll('.tabs');
         M.Tabs.init(elems, {duration: 200, onShow: undefined, swipeable: false, responsiveThreshold: Infinity}, 1);
     });
 
-
     // <li class="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
     return (
-        <div class="container" style={{ textAlign: 'center' }}>
-            <h4>
-                Einstellungen
-            </h4>
-            { createContent(props) }
+        <div>
+            {renderContent(props)}
         </div>
+
     );
 };
 
@@ -121,4 +105,4 @@ function mapStateToProps({ auth }) {
     return { auth };
 }
 
-export default connect(mapStateToProps)(Preferences);
+export default connect(mapStateToProps)(AdminPanel);

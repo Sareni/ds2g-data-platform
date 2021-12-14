@@ -8,7 +8,7 @@ import CustomForm from './CustomForm';
 
 // TODO USE Materialize SWITCHES INSTEAD
 
-const PreferencesForm = () => {
+const CsvUploadForm = () => {
     const action = '/api/preferences';
     const submitButton = {
         icon: 'done',
@@ -43,4 +43,4 @@ const PreferencesForm = () => {
     );
 };
 
-export default PreferencesForm;
+export default CsvUploadForm;

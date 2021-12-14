@@ -18,7 +18,11 @@ require('./models/Token');
 require('./models/Code');
 require('./models/Survey');
 require('./models/NewsArticle');
+require('./models/ForumArticle');
 require('./services/passport');
+
+// Set global directory
+// global.__basedir = __dirname;
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());

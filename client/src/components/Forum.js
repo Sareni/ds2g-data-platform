@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-class NewsBlog extends Component {
+class Forum extends Component {
     constructor (props) {
         super(props);
         this.limit = 10;
@@ -14,7 +14,7 @@ class NewsBlog extends Component {
       }
     
     async getMessages(skip=0) {
-       const res = await axios.get(`/api/messages?skip=${skip}&limit=${this.limit}`);
+       const res = await axios.get(`/api/forum?skip=${skip}&limit=${this.limit}`);
        this.setState({
             blogEntries: res.data.messages,
             blogEntryCount: res.data.count
@@ -28,21 +28,24 @@ class NewsBlog extends Component {
     async changePage(page) {
         await this.getMessages(page*this.limit);
         this.setState({
-            activePage: page,
+            activePage: page
        });
      }
 
     renderContent() {
         const blogEntries = this.state.blogEntries.map((be) => {
             return (
-                <div style={{ border: '1px solid rgba(0, 0, 0, 0.4)', padding: '10px', margin: '20px 0', boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.2)'}}>
+                <a href={`/documentation/forum/article?id=${be.id}`} style={{ display: 'block', textDecoration: 'none', color: 'black', border: '1px solid rgba(0, 0, 0, 0.4)', padding: '10px', margin: '20px 0', boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.2)'}}>
                     <div style={{ margin: '10px 0'}}>
-                        Neuigkeit vom {new Date(be.releaseDate).toLocaleDateString('de-AT')}
+                        {new Date(be.created).toLocaleDateString('de-AT')}
+                    </div>
+                    <div style={{ margin: '10px 0'}}>
+                        <h5>{be.headline}</h5>
                     </div>
                     <div style={{ margin: '10px 0'}}>
                         {be.content}
                     </div>
-                </div> 
+                </a> 
             );
         });
         return blogEntries;
@@ -93,6 +96,7 @@ class NewsBlog extends Component {
     render() {
         return (
             <div className='container'>
+                <a href='/documentation/forum/add' class="btn-floating btn-large waves-effect waves-light blue-grey" style={{margin: '30px auto', display: 'block'}}><i class="material-icons">add</i></a>
                 { this.renderContent() }
                 { this.renderPagination() }
             </div>
@@ -100,4 +104,4 @@ class NewsBlog extends Component {
     }
 }
 
-export default NewsBlog;
+export default Forum;

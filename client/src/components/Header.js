@@ -11,6 +11,7 @@ class Header extends Component {
         M.Dropdown.init(elems, {inDuration: 300, outDuration: 225, coverTrigger: false, constrainWidth: false, alignment: 'right'});
     }
 
+
     renderContent() {
         switch (this.props.auth) {
             case null:
@@ -28,15 +29,32 @@ class Header extends Component {
                 ]; //<li><a href='/auth/google'>Login</a></li>
 
             default:
-                return [
+                console.log('auth', this.props.auth.accountType);
+                const menuTextElements = [
                     <li><Link to="/documentation">Dokumentation</Link></li>,
                     <li><Link to="/pricing">Preise</Link></li>,
                     <li><Link to="/projects">Projekte</Link></li>,
-                    <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>,
+                    <li key='2'><div style={{width: '50px', height: '1px'}}></div></li>
+                ];
+
+                const menuAdminPanel = <li><a href='/admin'><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>directions_walk</i></a></li>;
+
+                const menuIconElements = [
                     <li><a href='/preferences'><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>build</i></a></li>,
                     <li><a href="/account"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>account_circle</i></a></li>,
-                    <li><a href="/api/logout"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>logout</i></a></li>,
+                    <li><a href="/api/logout"><i className="material-icons" style={{height: '51px', lineHeight: '51px'}}>logout</i></a></li>
                 ];
+
+                let menuElements = [];
+                menuElements = menuElements.concat(menuTextElements);
+
+                if (this.props.auth.accountType === 'admin') {
+                    menuElements.push(menuAdminPanel);
+                }
+
+                menuElements = menuElements.concat(menuIconElements);
+
+                return menuElements;
         }
     }
 
